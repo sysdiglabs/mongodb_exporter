@@ -24,7 +24,7 @@ ENTRYPOINT [ "/bin/mongodb_exporter" ]
 
 FROM quay.io/sysdig/sysdig-mini-ubi:1 as ubi
 
-COPY --from=base /go/src/github.com/percona/mongodb_exporter/bin/mongodb_exporter /bin/mongodb_exporter
+COPY --from=builder /go/src/github.com/percona/mongodb_exporter/bin/mongodb_exporter /bin/mongodb_exporter
 
 EXPOSE      9216
 USER        59000:59000
