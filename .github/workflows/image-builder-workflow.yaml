@@ -45,8 +45,8 @@ jobs:
           ignore-failed-scan: true
           input-type: docker-daemon
           run-as-user: root
-      - name: Scan local image
-        id: scan-local
+      - name: Scan local image 2
+        id: scan-local2
         uses: sysdiglabs/scan-action@v3
         with:
           image-tag: "temp-mongodb-exporter:latest-ubi"
