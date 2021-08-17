@@ -40,7 +40,16 @@ jobs:
         id: scan-local
         uses: sysdiglabs/scan-action@v3
         with:
-          image-tag: "temp-mongodb-exporter:testing"
+          image-tag: "temp-mongodb-exporter:latest"
+          sysdig-secure-token: ${{ secrets.SYSDIG_SECURE_TOKEN }}
+          ignore-failed-scan: true
+          input-type: docker-daemon
+          run-as-user: root
+      - name: Scan local image
+        id: scan-local
+        uses: sysdiglabs/scan-action@v3
+        with:
+          image-tag: "temp-mongodb-exporter:latest-ubi"
           sysdig-secure-token: ${{ secrets.SYSDIG_SECURE_TOKEN }}
           ignore-failed-scan: true
           input-type: docker-daemon
