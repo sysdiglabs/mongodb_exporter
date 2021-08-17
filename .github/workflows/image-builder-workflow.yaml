@@ -33,8 +33,8 @@ jobs:
           echo $CURRENT_VERSION
           export NEXT_VERSION=$(./builder/inc_version.sh $CURRENT_VERSION)
           echo $NEXT_VERSION
-          docker build --label version=$NEXT_VERSION -f ./builder/Dockerfile -t temp-mongodb-exporter:$VERSION .
-          docker build --label version=$NEXT_VERSION -f ./builder/Dockerfile.ubi -t temp-mongodb-exporter:$VERSION-ubi .  
+          docker build --label version=$NEXT_VERSION -f ./builder/Dockerfile -t temp-mongodb-exporter:$VERSION --target scratch .
+          docker build --label version=$NEXT_VERSION -f ./builder/Dockerfile -t temp-mongodb-exporter:$VERSION-ubi --target ubi .  
 
       - name: Scan local image
         id: scan-local
