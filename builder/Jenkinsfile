@@ -23,8 +23,8 @@ pipeline {
                         sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest"""
                         env.VERSION = sh(script:"""docker inspect --format '{{ index .Config.Labels "version" }}' ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest""", returnStdout: true).trim()
                         echo "VERSION = ${env.VERSION}"
-                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}"""
-                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi"""
+                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:v${env.VERSION}"""
+                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:v${env.VERSION}-ubi"""
                     }
                 }
             }
@@ -33,12 +33,12 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("https://quay.io", "QUAY") {
-                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION} quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}"""
+                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION} quay.io/sysdig/promcat-${env.EXPORTER}:v${env.VERSION}"""
                         sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION} quay.io/sysdig/promcat-${env.EXPORTER}:latest"""
-                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}-ubi"""
-                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}"""
+                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi quay.io/sysdig/promcat-${env.EXPORTER}:v${env.VERSION}-ubi"""
+                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:v${env.VERSION}"""
                         sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:latest"""
-                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}-ubi"""
+                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:v${env.VERSION}-ubi"""
                     }
                 }
             }
