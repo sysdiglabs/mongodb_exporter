@@ -21,7 +21,7 @@ pipeline {
                 script {
                     docker.withRegistry("https://${env.ARTIFACTORY_URL}",  registryCredential) {        
                         sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest"""
-                        env.VERSION = sh(script:"""docker inspect --format '{{ index .Config.Labels "version" }}' ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest""", returnStdout: true).trim()
+                        env.VERSION = sh(script:"""docker inspect --format '{{ index .Config.Labels "release" }}' ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest""", returnStdout: true).trim()
                         echo "VERSION = ${env.VERSION}"
                         sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:v${env.VERSION}"""
                         sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:v${env.VERSION}-ubi"""
@@ -46,8 +46,8 @@ pipeline {
     } //stages
     post {
     always {
-        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}"
-        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi"
+        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:v${env.VERSION}"
+        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:v${env.VERSION}-ubi"
         sh "docker images -q -f 'dangling=true' | xargs --no-run-if-empty docker rmi -f"
         cleanWs deleteDirs: true, notFailBuild: true
     }

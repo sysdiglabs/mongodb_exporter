@@ -19,8 +19,8 @@ jobs:
       run: exit 78
     - name: Build image
       run: |
-        docker build --label version=${{ github.event.release.tag_name }} -f ./builder/Dockerfile --target scratch -t artifactory.internal.sysdig.com/mongodb-exporter:latest .
-        docker build --label version=${{ github.event.release.tag_name }} -f ./builder/Dockerfile --target ubi -t artifactory.internal.sysdig.com/mongodb-exporter:${{ github.event.release.tag_name }}-ubi .
+        docker build --label release=${{ github.event.release.tag_name }} -f ./builder/Dockerfile --target scratch -t artifactory.internal.sysdig.com/mongodb-exporter:latest .
+        docker build --label release=${{ github.event.release.tag_name }} -f ./builder/Dockerfile --target ubi -t artifactory.internal.sysdig.com/mongodb-exporter:${{ github.event.release.tag_name }}-ubi .
     - name: Publish docker image
       run: |
         docker tag artifactory.internal.sysdig.com/mongodb-exporter:latest artifactory.internal.sysdig.com/mongodb-exporter:${{ github.event.release.tag_name }}

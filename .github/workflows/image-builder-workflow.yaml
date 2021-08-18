@@ -29,12 +29,10 @@ jobs:
           password: ${{ secrets.ARTI_TOKEN }}
       - name: Increase version and build
         run: |
-          export CURRENT_VERSION=$(docker inspect --format '{{ index .Config.Labels "version" }}' artifactory.internal.sysdig.com/mongodb-exporter:$VERSION)
-          echo $CURRENT_VERSION
-          export NEXT_VERSION=$(./builder/inc_version.sh $CURRENT_VERSION)
-          echo $NEXT_VERSION
-          docker build --label version=$NEXT_VERSION -f ./builder/Dockerfile -t temp-mongodb-exporter:$VERSION --target scratch .
-          docker build --label version=$NEXT_VERSION -f ./builder/Dockerfile -t temp-mongodb-exporter:$VERSION-ubi --target ubi .  
+          docker pull artifactory.internal.sysdig.com/mongodb-exporter:$VERSION
+          export RELEASE=$(docker inspect --format '{{ index .Config.Labels "release" }}' artifactory.internal.sysdig.com/mongodb-exporter:$VERSION)
+          docker build --label release=$RELEASE -f ./builder/Dockerfile -t temp-mongodb-exporter:$VERSION --target scratch .
+          docker build --label version=$RELEASE -f ./builder/Dockerfile -t temp-mongodb-exporter:$VERSION-ubi --target ubi .  
 
       - name: Scan local image
         id: scan-local
