@@ -19,8 +19,9 @@ pipeline {
         stage('Pull image from artifactory') {
             steps {
                 script {
-                    docker.withRegistry("https://${env.ARTIFACTORY_URL}",  registryCredential) {            
-                        env.VERSION = sh(script:"""docker inspect --format '{{ index .Config.Labels "version" }}' artifactory.internal.sysdig.com/${env.EXPORTER}:latest""", returnStdout: true).trim()
+                    docker.withRegistry("https://${env.ARTIFACTORY_URL}",  registryCredential) {        
+                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest"""
+                        env.VERSION = sh(script:"""docker inspect --format '{{ index .Config.Labels "version" }}' ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest""", returnStdout: true).trim()
                         echo "VERSION = ${env.VERSION}"
                         sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}"""
                         sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi"""
