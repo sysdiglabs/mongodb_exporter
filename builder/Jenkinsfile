@@ -23,8 +23,8 @@ pipeline {
                         sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest"""
                         env.VERSION = sh(script:"""docker inspect --format '{{ index .Config.Labels "release" }}' ${env.ARTIFACTORY_URL}/${env.EXPORTER}:latest""", returnStdout: true).trim()
                         echo "VERSION = ${env.VERSION}"
-                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:{env.VERSION}"""
-                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:{env.VERSION}-ubi"""
+                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}"""
+                        sh """docker pull ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi"""
                     }
                 }
             }
@@ -33,12 +33,12 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("https://quay.io", "QUAY") {
-                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION} quay.io/sysdig/promcat-${env.EXPORTER}:{env.VERSION}"""
+                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION} quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}"""
                         sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION} quay.io/sysdig/promcat-${env.EXPORTER}:latest"""
-                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi quay.io/sysdig/promcat-${env.EXPORTER}:{env.VERSION}-ubi"""
-                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:{env.VERSION}"""
+                        sh """docker tag ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}-ubi"""
+                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}"""
                         sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:latest"""
-                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:{env.VERSION}-ubi"""
+                        sh """docker push quay.io/sysdig/promcat-${env.EXPORTER}:${env.VERSION}-ubi"""
                     }
                 }
             }
@@ -46,8 +46,8 @@ pipeline {
     } //stages
     post {
     always {
-        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:{env.VERSION}"
-        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:{env.VERSION}-ubi"
+        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}"
+        sh "docker rmi -f ${env.ARTIFACTORY_URL}/${env.EXPORTER}:${env.VERSION}-ubi"
         sh "docker images -q -f 'dangling=true' | xargs --no-run-if-empty docker rmi -f"
         cleanWs deleteDirs: true, notFailBuild: true
     }
