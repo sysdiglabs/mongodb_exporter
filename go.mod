@@ -12,5 +12,6 @@ require (
 	github.com/sergi/go-diff v1.0.0 // indirect
 	github.com/stretchr/testify v1.6.1
 	go.mongodb.org/mongo-driver v1.5.1
+	golang.org/x/crypto v0.17.0 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
